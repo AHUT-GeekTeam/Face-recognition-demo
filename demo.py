@@ -5,11 +5,11 @@ import cv2
 from multiprocessing import Process,Queue
 from aip import AipFace
 
-APP_ID = '你的 App ID'
-API_KEY = '你的 Api Key'
-SECRET_KEY = '你的 Api Key'
+APP_ID = '******'
+API_KEY = '******'
+SECRET_KEY = '******'
 imageType = "BASE64"
-groupIdList = '你的 groupId'
+groupIdList = '******'
 filePath = "face.jpg"
 
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
@@ -20,8 +20,8 @@ x_const = int(video.get(cv2.CAP_PROP_FRAME_WIDTH) / 2)
 y_const = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT) / 2)
 
 def video_show(i = 1):
- #cv2.namedWindow("face", cv2.WINDOW_NORMAL) 
- #cv2.setWindowProperty("face", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+ # cv2.namedWindow("face", cv2.WINDOW_NORMAL) 
+ # cv2.setWindowProperty("face", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
  while True:
     time = cv2.getTickCount()
     ret,cap = video.read()
@@ -34,6 +34,7 @@ def video_show(i = 1):
     try:
          Rx.get_nowait()
          cv2.putText(cap,"Access",(x_const-85,y_const - 150), cv2.FONT_HERSHEY_SIMPLEX, 1.6, (0, 0, 255), 2)
+         '''put your main code here'''
     except:
          pass
     cv2.line(cap,(x_const-100,y_const+100),(x_const-100,y_const+80),(0,255,0),2)
