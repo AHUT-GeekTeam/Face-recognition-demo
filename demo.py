@@ -46,7 +46,7 @@ def video_show(i = 1):
     cv2.line(cap,(x_const-100,y_const-100),(x_const-100,y_const-80),(0,255,0),2)
     cv2.line(cap,(x_const-100,y_const-100),(x_const-80,y_const-100),(0,255,0),2)
     cv2.line(cap,(x_const-100,y_const-100+i*10),(x_const+100,y_const-100+i*10),(0,255,0),2)
-    cv2.putText(cap, "FPS:%s"%str(int(cv2.getTickFrequency()/(cv2.getTickCount()-time))), (5,15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    cv2.putText(cap, "FPS:%s"%int(cv2.getTickFrequency()/(cv2.getTickCount()-time)), (5,15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
     cv2.imshow('face',cap)
     a = cv2.waitKey(1)
     if a == ord('c') or a == ord('C'):
