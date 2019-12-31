@@ -8,9 +8,8 @@ from aip import AipFace
 APP_ID = '******'
 API_KEY = '******'
 SECRET_KEY = '******'
-imageType = "BASE64"
 groupIdList = '******'
-filePath = "face.jpg"
+imageType = "BASE64"
 
 client = AipFace(APP_ID, API_KEY, SECRET_KEY)
 video = cv2.VideoCapture(0)
@@ -26,7 +25,7 @@ def video_show(i = 1):
  # cv2.setWindowProperty("face", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
  while True:
     time = cv2.getTickCount()
-    ret,cap = video.read()
+    _,cap = video.read()
     img = cv2.resize(cap,(int(x_const*2/scalar),int(y_const*2/scalar)))
     img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(img_gray,scaleFactor=1.1,minNeighbors=5)
@@ -34,8 +33,7 @@ def video_show(i = 1):
     if i == 20:
         i = 0
         if Tx.empty() and len(faces):
-            cv2.imwrite("face.jpg",img)
-            Tx.put(i)
+            Tx.put(str(base64.b64encode(cv2.imencode(".jpg",img)[1].tostring()),'UTF-8'))
 
     for (x,y,w,h) in faces:
         x *= scalar
@@ -63,28 +61,24 @@ def video_show(i = 1):
     cv2.putText(cap, "FPS:%d"%int(cv2.getTickFrequency()/(cv2.getTickCount()-time)), (5,15), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
     cv2.imshow('face',cap)
     a = cv2.waitKey(1)
-    if a == ord('e') or a == ord('E'):
+    if a == ord('c') or a == ord('C'):
         break
  video.release()
  cv2.destroyAllWindows()
 
 def face_compare(Tx,Rx):
  while True:
-     Tx.get()
-     with open(filePath,"rb") as f:
-          data = base64.b64encode(f.read())
-     image = str(data,'UTF-8')
      options = {"liveness_control":"HIGH"}
      try:
-         result = client.search(image, imageType, groupIdList,options)
+         result = client.search(Tx.get(), imageType, groupIdList,options)
      except:
          continue
      if "SUCCESS" in result["error_msg"] and result["result"]["user_list"][0]["score"] >= 80:
           Rx.put(True)
 
 if __name__ == '__main__':
-    Tx = Queue(1)
-    Rx = Queue(1)
+    Tx = Queue()
+    Rx = Queue()
     p = Process(target = face_compare,args = (Tx,Rx),daemon = True)
     p.start()
     video_show()
