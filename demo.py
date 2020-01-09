@@ -33,7 +33,7 @@ def video_show(i = 1):
     if i == 20:
         i = 0
         if Tx.empty() and len(faces):
-            Tx.put(str(base64.b64encode(cv2.imencode(".jpg",img)[1].tostring()),'UTF-8'))
+            Tx.put(cv2.imencode(".jpg",img)[1].tostring())
 
     for (x,y,w,h) in faces:
         x *= scalar
@@ -70,7 +70,7 @@ def face_compare(Tx,Rx):
  while True:
      options = {"liveness_control":"HIGH"}
      try:
-         result = client.search(Tx.get(), imageType, groupIdList,options)
+         result = client.search(str(base64.b64encode(Tx.get()),'UTF-8'), imageType, groupIdList,options)
      except:
          continue
      if "SUCCESS" in result["error_msg"] and result["result"]["user_list"][0]["score"] >= 80:
